@@ -26,11 +26,12 @@ public class ContactTracingImpl implements ContactTracing {
         List<String> selectedCourseList = new ArrayList();
         studentCourseList.forEach((studentID, linkedCourseID)->{
             if (studentID.equals(inputStudentNumber)){
-                courseList.forEach((courseName, id)->{
-                    if (linkedCourseID.equals(id)){
-                        selectedCourseList.add(courseName);
-                    }
-                });
+//                courseList.forEach((courseName, id)->{
+//                    if (linkedCourseID.equals(id)){
+//                        selectedCourseList.add(courseName);
+//                    }
+//                });
+                selectedCourseList.add(linkedCourseID);
             }
         });
 
