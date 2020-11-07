@@ -9,43 +9,39 @@ public class ContactTracingImpl implements ContactTracing {
     private Map<String, String> emailList;
     private Map<String, String> courseList;
     private Map<String, String> studentCourseList;
+    private List<String> exposedStudents = new ArrayList();
 
     public void loadStudentList(Map<String, String> studentEntry){
+        // <id, name>
         studentList = studentEntry;
     }
     public void loadCourseList(Map<String, String> courseEntry){
+        // <id, name>
         courseList = courseEntry;
     }
     public void loadEmailList(Map<String, String> emailEntry){
+        // <id, email>
         emailList = emailEntry;
     }
     public void loadStudentCourseList(Map<String, String> studentCourseEntry){
+        // <studentId, courseId>
         studentCourseList = studentCourseEntry;
     }
     public List<String> findMatchingCourses(String inputStudentNumber){
         List<String> selectedCourseList = new ArrayList();
         studentCourseList.forEach((studentID, linkedCourseID)->{
             if (studentID.equals(inputStudentNumber)){
-//                courseList.forEach((courseName, id)->{
-//                    if (linkedCourseID.equals(id)){
-//                        selectedCourseList.add(courseName);
-//                    }
-//                });
                 selectedCourseList.add(linkedCourseID);
             }
         });
-
         return selectedCourseList;
     }
     public List<String> findMatchingStudents(List<String> matchingCourseList){
-        List<String> exposedStudents = new ArrayList();
-        matchingCourseList.forEach((course)->{
-            studentCourseList.forEach((studentID, courseID)->{
-                if (course.equals(courseID)){
-                    exposedStudents.add(studentID);
-                }
-            });
-        });
+        matchingCourseList.forEach((course)-> studentCourseList.forEach((studentID, courseID)->{
+            if (course.equals(courseID)){
+                exposedStudents.add(studentID);
+            }
+        }));
         return exposedStudents;
     }
 
