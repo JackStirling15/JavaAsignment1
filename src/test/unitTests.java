@@ -34,6 +34,51 @@ public class unitTests {
     }
 
     @Test
+    public void testReturnEmails_1(){
+        ContactTracing CTinstance = new ContactTracingImpl();
+        loadData(CTinstance);
+        List<String> exposedStudents = CTinstance.contactTracing("s101");
+        System.out.println(exposedStudents);
+        Assert.assertEquals(1, exposedStudents.size());
+    }
+
+    @Test
+    public void testReturnEmails_2(){
+        ContactTracing CTinstance = new ContactTracingImpl();
+        loadData(CTinstance);
+        List<String> exposedStudents = CTinstance.contactTracing("s102");
+        System.out.println(exposedStudents);
+        Assert.assertEquals(0, exposedStudents.size());
+    }
+
+    @Test
+    public void testReturnEmails_3(){
+        ContactTracing CTinstance = new ContactTracingImpl();
+        loadData(CTinstance);
+        List<String> exposedStudents = CTinstance.contactTracing("s103");
+        System.out.println(exposedStudents);
+        Assert.assertEquals(1, exposedStudents.size());
+    }
+
+    @Test
+    public void testFindMatchingCourses(){
+        ContactTracing CTinstance = new ContactTracingImpl();
+        loadData(CTinstance);
+        List<String> courses = CTinstance.findMatchingCourses("s103");
+        System.out.println(courses);
+        Assert.assertEquals(courses.get(0), "se01");
+    }
+
+    @Test
+    public void testFindMatchingCoursesFail(){
+        ContactTracing CTinstance = new ContactTracingImpl();
+        loadData(CTinstance);
+        List<String> courses = CTinstance.findMatchingCourses("s103sdfas");
+        System.out.println(courses);
+        Assert.assertEquals(courses.size(), 0);
+    }
+
+    @Test
     public void testLoadStudents(){
         ContactTracing CTinstance = new ContactTracingImpl();
         Map<String, String> studentEntry = new HashMap<>();
@@ -73,30 +118,5 @@ public class unitTests {
         CTinstance.loadStudentCourseList(studentCourseList);
     }
 
-    @Test
-    public void testReturnEmails(){
-        ContactTracing CTinstance = new ContactTracingImpl();
-        loadData(CTinstance);
-        List<String> exposedStudents = CTinstance.contactTracing("s103");
-        System.out.println(exposedStudents);
-        Assert.assertEquals(2, exposedStudents.size());
-    }
 
-    @Test
-    public void testFindMatchingCourses(){
-        ContactTracing CTinstance = new ContactTracingImpl();
-        loadData(CTinstance);
-        List<String> courses = CTinstance.findMatchingCourses("s103");
-        System.out.println(courses);
-        Assert.assertEquals(courses.get(0), "se01");
-    }
-
-    @Test
-    public void testFindMatchingCoursesFail(){
-        ContactTracing CTinstance = new ContactTracingImpl();
-        loadData(CTinstance);
-        List<String> courses = CTinstance.findMatchingCourses("s103sdfas");
-        System.out.println(courses);
-        Assert.assertEquals(courses.size(), 0);
-    }
 }

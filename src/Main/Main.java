@@ -1,7 +1,6 @@
 package Main;
 
 import uk.ac.uos.i2p.assignment.*;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,29 +10,38 @@ import java.io.IOException;
 
 public class Main {
     public static void main(String[] args) {
-        // load data
+        // create object from contact tracing library
         ContactTracing contactTracingInstance = new ContactTracingImpl();
         createData(contactTracingInstance);
 
+        // create user object, and run load functions
         StudentDetails user = new StudentDetails();
         user.loadStudentName();
         user.loadStudentNumber();
         user.loadCovidResult();
 
+        // only run code if the user reports they have covid
         if (user.covidResult){
             System.out.println("User Has COVID - Reporting Results");
-            user.writeUserDetails();
+
+            // return info about students in possible contact
             List<String> emailList = contactTracingInstance.contactTracing(user.studentNumber);
-            List<String> exposedStudents =  contactTracingInstance.
+
+            // print results to console and write to file
+            user.writeUserDetails();
+
+            // if there are any effected students
+            if (emailList.size() != 0) {
+                user.writeCovidDetails(emailList);
+                System.out.println("Effected Students:");
+                System.out.println(emailList);
+            } else {
+                System.out.println("No Students Were In Contact.");
+            }
+
         } else {
-            System.out.println("User Does Not Have COVID");
-
+            System.out.println("User Does Not Have COVID: No Action Needed");
         }
-
-
-
-
-
     }
 
     private static void createData(ContactTracing CTinstance){
@@ -64,33 +72,57 @@ public class Main {
 }
 
 class StudentDetails {
+    // load scanner for reading cli input
     private Scanner scanner = new Scanner(System.in);
 
     private String studentName;
-    String studentNumber;
-    boolean covidResult;
     private FileWriter positiveResultFile;
     private FileWriter contactTracedFile;
+    String studentNumber;
+    boolean covidResult;
+
+    // directory variable, from project root
+    String fileDir = System.getProperty("user.dir") + "/src/Main/outputFiles/";
 
 
     void loadStudentName(){
+        // input name
         System.out.println("Enter Name: ");
         studentName = scanner.nextLine();
     }
     void loadStudentNumber(){
+        // input number
         System.out.println("Enter Student Number: ");
         studentNumber = scanner.nextLine();
     }
     void loadCovidResult() {
+        // input covid result
         System.out.println("Enter Covid Result: (y/n) ");
+        // ensure value is yes to change result value
         if ("y".equals(scanner.nextLine())) {
             covidResult = true;
         }
     }
     void writeUserDetails(){
+        // write output to file, catch exceptions
         try {
-            positiveResultFile = new FileWriter("outputFiles/positiveResult.txt");
+            System.out.println("Input Postive Result File Name:");
+            positiveResultFile = new FileWriter(fileDir + scanner.nextLine());
             positiveResultFile.write(studentNumber + "-" + studentName);
+            positiveResultFile.close();
+        } catch (IOException e){
+            System.out.println("Error");
+            e.printStackTrace();
+        }
+    }
+
+    void writeCovidDetails(List<String> emailList){
+        // write output to file, catch exceptions
+        try {
+            System.out.println("Input Contact Traced File Name:");
+            contactTracedFile = new FileWriter(fileDir + scanner.nextLine());
+            contactTracedFile.write(String.join("\n", emailList));
+            contactTracedFile.close();
         } catch (IOException e){
             System.out.println("Error");
             e.printStackTrace();
