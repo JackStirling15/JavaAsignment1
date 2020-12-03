@@ -1,6 +1,8 @@
 package Main;
 
 import uk.ac.uos.i2p.assignment.*;
+
+import java.io.BufferedWriter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -45,16 +47,23 @@ public class Main {
     }
 
     private static void createData(ContactTracing CTinstance){
+        // insert data into the ContactTracing Object
         Map<String, String> studentEntry = new HashMap<>();
         studentEntry.put("s101", "clint eastwood");
         studentEntry.put("s102", "jamie foxx");
         studentEntry.put("s103", "olivia wilde");
+        studentEntry.put("s104", "test name 1");
+        studentEntry.put("s105", "test name 2");
+        studentEntry.put("s106", "test name 3");
         CTinstance.loadStudentList(studentEntry);
 
         Map<String, String> studentEmail = new HashMap<>();
         studentEmail.put("s101", "abc@uos.ac.uk");
         studentEmail.put("s102", "xyz@uos.ac.uk");
         studentEmail.put("s103", "klm@uos.ac.uk");
+        studentEmail.put("s104", "test1@uos.ac.uk");
+        studentEmail.put("s105", "test2@uos.ac.uk");
+        studentEmail.put("s106", "test3@uos.ac.uk");
         CTinstance.loadEmailList(studentEmail);
 
         Map<String, String> courseList = new HashMap<>();
@@ -67,6 +76,9 @@ public class Main {
         studentCourseList.put("s101", "se01");
         studentCourseList.put("s102", "ne02");
         studentCourseList.put("s103", "se01");
+        studentCourseList.put("s104", "se01");
+        studentCourseList.put("s105", "se01");
+        studentCourseList.put("s106", "ne02");
         CTinstance.loadStudentCourseList(studentCourseList);
     }
 }
@@ -74,10 +86,7 @@ public class Main {
 class StudentDetails {
     // load scanner for reading cli input
     private Scanner scanner = new Scanner(System.in);
-
     private String studentName;
-    private FileWriter positiveResultFile;
-    private FileWriter contactTracedFile;
     String studentNumber;
     boolean covidResult;
 
@@ -106,9 +115,16 @@ class StudentDetails {
     void writeUserDetails(){
         // write output to file, catch exceptions
         try {
-            System.out.println("Input Postive Result File Name:");
-            positiveResultFile = new FileWriter(fileDir + scanner.nextLine());
-            positiveResultFile.write(studentNumber + "-" + studentName);
+            System.out.println("Input Positive Result File Name:");
+            String fileName = scanner.nextLine();
+            while (fileName.equals("")){
+                System.out.println("Input valid File Name");
+                fileName = scanner.nextLine();
+            }
+            FileWriter fileWriter = new FileWriter(fileDir + fileName, true);
+            BufferedWriter positiveResultFile = new BufferedWriter(fileWriter);
+            positiveResultFile.write(studentNumber + " - " + studentName);
+            positiveResultFile.newLine();
             positiveResultFile.close();
         } catch (IOException e){
             System.out.println("Error");
@@ -120,9 +136,14 @@ class StudentDetails {
         // write output to file, catch exceptions
         try {
             System.out.println("Input Contact Traced File Name:");
-            contactTracedFile = new FileWriter(fileDir + scanner.nextLine());
-            contactTracedFile.write(String.join("\n", emailList));
-            contactTracedFile.close();
+            String fileName = scanner.nextLine();
+            while (fileName.equals("")){
+                System.out.println("Input valid File Name");
+                fileName = scanner.nextLine();
+            }
+            FileWriter fileWriter = new FileWriter(fileDir + fileName);
+            fileWriter.write(String.join("\n", emailList));
+            fileWriter.close();
         } catch (IOException e){
             System.out.println("Error");
             e.printStackTrace();

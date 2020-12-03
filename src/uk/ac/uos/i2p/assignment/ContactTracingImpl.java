@@ -58,8 +58,8 @@ public class ContactTracingImpl implements ContactTracing {
         List<String> courseList = findMatchingCourses(inputStudentNumber);
         List<String> exposedStudentList = findMatchingStudents(courseList);
         // find associate emails for each id
-        // exposedStudentList.forEach((studentID)-> studentDetails.add(studentID + " " + emailList.get(studentID) + " " + studentList.get(studentID)));
-        exposedStudentList.forEach((studentID)-> studentDetails.add(emailList.get(studentID)));
+        exposedStudentList.forEach((studentID)-> studentDetails.add(studentID + " " + emailList.get(studentID) + " " + studentList.get(studentID)));
+       // exposedStudentList.forEach((studentID)-> studentDetails.add(emailList.get(studentID)));
         return studentDetails;
     }
 }
